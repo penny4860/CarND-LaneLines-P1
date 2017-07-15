@@ -4,7 +4,7 @@ import matplotlib.image as mpimg
 import numpy as np
 import os
 
-from utils import grayscale, canny, gaussian_blur, region_of_interest, hough_lines
+from utils import grayscale, canny, gaussian_blur, region_of_interest, hough_lines, weighted_img
 
 
 TEST_DIR = "test_images"
@@ -41,6 +41,7 @@ def fine_lane_pipeline(image):
                           (xlength, ylength)]], dtype=np.int32)
     
     combo = region_of_interest(line_image, vertices)
+    combo = weighted_img(combo, image)
     return combo
 
 for filename in files:
