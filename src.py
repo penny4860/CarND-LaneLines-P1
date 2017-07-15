@@ -8,16 +8,6 @@ import os
 TEST_DIR = "test_images"
 files = os.listdir(TEST_DIR)
 
-# vertices = np.array(
-# [[(0,imshape[0]),
-#   (450, 290),
-#   (490, 290),
-#   (imshape[1],imshape[0])]], dtype=np.int32)
-
-# I chose parameters for my Hough space grid to be a rho of 2 pixels and theta of 1 degree (pi/180 radians).
-# I chose a threshold of 15, meaning at least 15 points in image space need to be associated with each line segment.
-# I imposed a min_line_length of 40 pixels, and max_line_gap of 20 pixels.
-
 # Read in and grayscale the image
 image = mpimg.imread(os.path.join(TEST_DIR, files[0]))
 gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
