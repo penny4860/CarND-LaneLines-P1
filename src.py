@@ -26,19 +26,19 @@ def fine_lane_pipeline(image):
     
     # Define the Hough transform parameters
     # Make a blank the same size as our image to draw on
-    rho = 2
+    rho = 1
     theta = np.pi/180
-    threshold = 15
+    threshold = 50
     min_line_length = 40
-    max_line_gap = 20
+    max_line_gap = 3
     
     # Run Hough on edge detected image
     line_image = hough_lines(edges, rho, theta, threshold, min_line_length, max_line_gap)
     
-    vertices = np.array([[(0, ylength),
+    vertices = np.array([[(xlength/8, ylength),
                           (xlength/2-ylength/10, ylength/2),
                           (xlength/2+ylength/10, ylength/2),
-                          (xlength, ylength)]], dtype=np.int32)
+                          (xlength/8*7, ylength)]], dtype=np.int32)
     
     combo = region_of_interest(line_image, vertices)
     combo = weighted_img(combo, image)
