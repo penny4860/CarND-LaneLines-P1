@@ -5,6 +5,9 @@ import numpy as np
 import cv2
 import os
 
+from utils import grayscale, canny, gaussian_blur, region_of_interest, draw_lines, hough_lines, weighted_img
+
+
 TEST_DIR = "test_images"
 files = os.listdir(TEST_DIR)
 
@@ -46,16 +49,14 @@ color_edges = np.dstack((edges, edges, edges))
 combo = cv2.addWeighted(color_edges, 0.8, line_image, 1, 0) 
 
 
-import utils
 imshape = combo.shape
 vertices = np.array([[(0,imshape[0]),(450, 290), (490, 290), (imshape[1],imshape[0])]], dtype=np.int32)
 
-combo = utils.region_of_interest(combo, vertices)
+combo = region_of_interest(combo, vertices)
 
 plt.imshow(image)
 plt.show()
 plt.imshow(combo)
 plt.show()
 
-print("done")
 
