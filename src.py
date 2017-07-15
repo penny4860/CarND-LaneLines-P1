@@ -10,8 +10,7 @@ from utils import grayscale, canny, gaussian_blur, region_of_interest, hough_lin
 TEST_DIR = "test_images"
 files = os.listdir(TEST_DIR)
 
-def fine_lane_pipeline(image_path):
-    image = mpimg.imread(image_path)
+def fine_lane_pipeline(image):
     imshape = image.shape
     xlength = imshape[1]
     ylength = imshape[0]
@@ -45,7 +44,8 @@ def fine_lane_pipeline(image_path):
     return combo
 
 for filename in files:
-    im_out = fine_lane_pipeline(os.path.join(TEST_DIR, filename))
+    image = mpimg.imread(os.path.join(TEST_DIR, filename))
+    im_out = fine_lane_pipeline(image)
     mpimg.imsave(os.path.join("test_images_output", filename), im_out)
 
 
