@@ -13,16 +13,15 @@ files = os.listdir(TEST_DIR)
 
 # Read in and grayscale the image
 image = mpimg.imread(os.path.join(TEST_DIR, files[0]))
-gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+gray = grayscale(image)
 
 # Define a kernel size and apply Gaussian smoothing
-kernel_size = 5
-blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0)
+blur_gray = gaussian_blur(gray, kernel_size=5)
 
 # Define our parameters for Canny and apply
 low_threshold = 50
 high_threshold = 150
-edges = cv2.Canny(blur_gray, low_threshold, high_threshold)
+edges = canny(blur_gray, low_threshold, high_threshold)
 
 # Define the Hough transform parameters
 # Make a blank the same size as our image to draw on
@@ -31,28 +30,14 @@ theta = np.pi/180
 threshold = 15
 min_line_length = 40
 max_line_gap = 20
-line_image = np.copy(image)*0 #creating a blank to draw lines on
 
 # Run Hough on edge detected image
-lines = cv2.HoughLinesP(edges, rho, theta, threshold, np.array([]),
-                            min_line_length, max_line_gap)
+line_image = hough_lines(edges, rho, theta, threshold, min_line_length, max_line_gap)
 
-# Iterate over the output "lines" and draw lines on the blank
-for line in lines:
-    for x1,y1,x2,y2 in line:
-        cv2.line(line_image,(x1,y1),(x2,y2),(255,0,0),10)
-
-# Create a "color" binary image to combine with line image
-color_edges = np.dstack((edges, edges, edges)) 
-
-# Draw the lines on the edge image
-combo = cv2.addWeighted(color_edges, 0.8, line_image, 1, 0) 
-
-
-imshape = combo.shape
+imshape = line_image.shape
 vertices = np.array([[(0,imshape[0]),(450, 290), (490, 290), (imshape[1],imshape[0])]], dtype=np.int32)
 
-combo = region_of_interest(combo, vertices)
+combo = region_of_interest(line_image, vertices)
 
 plt.imshow(image)
 plt.show()
