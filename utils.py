@@ -97,9 +97,13 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=2):
           
         s1 = slop(line1)
         s2 = slop(line2)
+        s3 = slop(merge_line(line1, line2))
           
-        if abs(s1-s2) <= 0.001:
+        # 1 rad == 57 degree
+        # 1 rad == 1 degree
+        if abs(s1-s2) <= 0.02 and abs(s1-s3) <= 0.02:
             sorted_lines.append(merge_line(line1, line2))
+            print(s1, s2, s3)
 
     for line in sorted_lines:
         for x1,y1,x2,y2 in line:
