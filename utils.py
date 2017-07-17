@@ -66,29 +66,75 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=2):
     """
     def slop(line):
         x1,y1,x2,y2 = line[0, :]
-        return (y2-y1) / (x2-x1)
-
-    def get_average_line(line1, line2):
-        x1_line1, y1_line1, x2_line1, y2_line1 = line1[0, :]
-        x1_line2, y1_line2, x2_line2, y2_line2 = line2[0, :]
-
-        average_line = [(x1_line1 + x1_line2)/2,
-                        (y1_line1 + y1_line2)/2,
-                        (x2_line1 + x2_line2)/2,
-                        (y2_line1 + y2_line2)/2]
-        average_line = np.array(average_line).reshape(-1, 4)
-        return average_line.astype(int)
+        return np.arctan2((y2-y1), (x2-x1))
     
-    merged_lines = []
-    for l1 in lines:
-        for l2 in lines:
-            if abs(slop(l1) - slop(l2)) < min(slop(l1), slop(l2))*0.05:
-                avg_line = get_average_line(l1, l2)
-                merged_lines.append(avg_line)
+    def get_sorted_lines(lines):
+        slops = []
+        for line in lines:
+            slops.append(slop(line))
+        indexes = np.argsort(slops)
+        sorted_lines = [lines[i] for i in indexes]
+        return sorted_lines
 
-    for line in np.concatenate([lines, merged_lines]):
+    def get_close_point(line):
+        x1, y1, x2, y2 = line[0, :]
+        if y1 < y2:
+            return x2, y2
+        else:
+            return x1, y1
+
+    def get_far_point(line):
+        x1, y1, x2, y2 = line[0, :]
+        if y1 > y2:
+            return x2, y2
+        else:
+            return x1, y1
+
+    
+    def merge_line(line1, line2):
+        
+        c1 = get_close_point(line1)
+        c2 = get_close_point(line2)
+
+        f1 = get_far_point(line1)
+        f2 = get_far_point(line2)
+        
+        if c1[1] > c2[1]:
+            close_pt = c1
+        else:
+            close_pt = c2
+
+        if f1[1] < f2[1]:
+            far_pt = f1
+        else:
+            far_pt = f2
+            
+        line = [close_pt[0], close_pt[1], far_pt[0], far_pt[1]]
+        return np.array(line).reshape(-1, 4)
+        
+    
+    sorted_lines = get_sorted_lines(lines)
+    
+#     i = 0    
+#     while True:
+#         line1 = sorted_lines[i]
+#         line2 = sorted_lines[i+1]
+#         
+#         s1 = slop(line1)
+#         s2 = slop(line2)
+#         
+#         if abs(s1-s2) <= 0.01:
+#             sorted_lines[i] = merge_line(line1, line2)
+#             sorted_lines.pop(i+1)
+#         else:
+#             i += 1
+#         if i  == len(sorted_lines)-1:
+#             break
+
+    for line in sorted_lines:
         for x1,y1,x2,y2 in line:
-            cv2.line(img, (x1, y1), (x2, y2), color, thickness)
+            # cv2.line(img, (x1, y1), (x2, y2), color, thickness)
+            cv2.line(img, (x1, y1), (x2, y2), color, 10)
             
 
 def hough_lines(img, rho, theta, threshold, min_line_len, max_line_gap):
