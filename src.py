@@ -36,8 +36,8 @@ def fine_lane_pipeline(image):
     line_image = hough_lines(edges, rho, theta, threshold, min_line_length, max_line_gap)
     
     vertices = np.array([[(0, ylength),
-                          (xlength/2-ylength/10, ylength*2/3),
-                          (xlength/2+ylength/10, ylength*2/3),
+                          (xlength/2-ylength/10, ylength*0.6),
+                          (xlength/2+ylength/10, ylength*0.6),
                           (xlength, ylength)]], dtype=np.int32)
     
     combo = region_of_interest(line_image, vertices)
