@@ -28,9 +28,9 @@ def fine_lane_pipeline(image):
     # Make a blank the same size as our image to draw on
     rho = 1
     theta = np.pi/180
-    threshold = 50
-    min_line_length = 40
-    max_line_gap = 3
+    threshold = 25
+    min_line_length = 50
+    max_line_gap = 10
     
     # Run Hough on edge detected image
     line_image = hough_lines(edges, rho, theta, threshold, min_line_length, max_line_gap)
