@@ -87,18 +87,23 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=4):
 
         line = [x1, y1, x2, y2]
         return np.array(line).astype(int).reshape(-1, 4)
-        
+
+    def is_merge(line1, line2, thd = np.pi/180*2):
+        s1 = slop(line1)
+        s2 = slop(line2)
+        s3 = slop(merge_line(line1, line2))
+        if abs(s1-s2) <= thd and abs(s1-s3) <= thd and abs(s2-s3) <= thd:
+            return True
+        else:
+            return False
+    
     sorted_lines = get_sorted_lines(lines)
     
     for i in range(len(sorted_lines)-1):
         line1 = sorted_lines[i]
         line2 = sorted_lines[i+1]
            
-        s1 = slop(line1)
-        s2 = slop(line2)
-        s3 = slop(merge_line(line1, line2))
-           
-        if abs(s1-s2) <= np.pi/180 and abs(s1-s3) <= np.pi/180:
+        if is_merge:
             sorted_lines.append(merge_line(line1, line2))
 
     for line in sorted_lines:
