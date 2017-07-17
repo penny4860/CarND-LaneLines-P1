@@ -64,9 +64,32 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=2):
     If you want to make the lines semi-transparent, think about combining
     this function with the weighted_img() function below
     """
-    for line in lines:
+    def slop(line):
+        x1,y1,x2,y2 = line[0, :]
+        return (y2-y1) / (x2-x1)
+
+    def get_average_line(line1, line2):
+        x1_line1, y1_line1, x2_line1, y2_line1 = line1[0, :]
+        x1_line2, y1_line2, x2_line2, y2_line2 = line2[0, :]
+
+        average_line = [(x1_line1 + x1_line2)/2,
+                        (y1_line1 + y1_line2)/2,
+                        (x2_line1 + x2_line2)/2,
+                        (y2_line1 + y2_line2)/2]
+        average_line = np.array(average_line).reshape(-1, 4)
+        return average_line.astype(int)
+    
+    merged_lines = []
+    for l1 in lines:
+        for l2 in lines:
+            if abs(slop(l1) - slop(l2)) < min(slop(l1), slop(l2))*0.05:
+                avg_line = get_average_line(l1, l2)
+                merged_lines.append(avg_line)
+
+    for line in np.concatenate([lines, merged_lines]):
         for x1,y1,x2,y2 in line:
             cv2.line(img, (x1, y1), (x2, y2), color, thickness)
+            
 
 def hough_lines(img, rho, theta, threshold, min_line_len, max_line_gap):
     """
