@@ -68,6 +68,13 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=4):
         x1,y1,x2,y2 = line[0, :]
         return np.arctan2((y2-y1), (x2-x1))
     
+    def offset(line):
+        x1,y1,x2,y2 = line[0, :]
+        # m = min((y2-y1) / (x2-x1), 1000)
+        m = (y2-y1) / (x2-x1)
+        b = y1 - m * x1
+        return b
+    
     def get_sorted_lines(lines):
         slops = []
         for line in lines:
@@ -92,7 +99,12 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=4):
         s1 = slop(line1)
         s2 = slop(line2)
         s3 = slop(merge_line(line1, line2))
-        if abs(s1-s2) <= thd and abs(s1-s3) <= thd and abs(s2-s3) <= thd:
+        
+        b1 = offset(line1)
+        b2 = offset(line2)
+        
+        if abs(s1-s2) <= thd and abs(s1-s3) <= thd and abs(s2-s3) <= thd and abs(b1-b2) <=10:
+        #if abs(s1-s2) <= thd and abs(b1-b2) <= 10:
             return True
         else:
             return False
