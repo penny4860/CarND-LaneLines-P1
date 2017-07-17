@@ -29,7 +29,7 @@ def fine_lane_pipeline(image):
     rho = 1
     theta = np.pi/180
     threshold = 25
-    min_line_length = 5
+    min_line_length = 10
     max_line_gap = 5
     
     # Run Hough on edge detected image
