@@ -115,21 +115,21 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=2):
     
     sorted_lines = get_sorted_lines(lines)
     
-#     i = 0    
-#     while True:
-#         line1 = sorted_lines[i]
-#         line2 = sorted_lines[i+1]
-#         
-#         s1 = slop(line1)
-#         s2 = slop(line2)
-#         
-#         if abs(s1-s2) <= 0.01:
-#             sorted_lines[i] = merge_line(line1, line2)
-#             sorted_lines.pop(i+1)
-#         else:
-#             i += 1
-#         if i  == len(sorted_lines)-1:
-#             break
+    i = 0    
+    while True:
+        line1 = sorted_lines[i]
+        line2 = sorted_lines[i+1]
+         
+        s1 = slop(line1)
+        s2 = slop(line2)
+         
+        if abs(s1-s2) <= 0.01:
+            sorted_lines[i] = merge_line(line1, line2)
+            sorted_lines.pop(i+1)
+        else:
+            i += 1
+        if i  == len(sorted_lines)-1:
+            break
 
     for line in sorted_lines:
         for x1,y1,x2,y2 in line:
