@@ -47,7 +47,7 @@ def region_of_interest(img, vertices):
     return masked_image
 
 
-def draw_lines(img, lines, color=[255, 0, 0], thickness=2):
+def draw_lines(img, lines, color=[255, 0, 0], thickness=4):
     """
     NOTE: this is the function you might want to use as a starting point once you want to 
     average/extrapolate the line segments you detect to map out the full
@@ -88,28 +88,22 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=2):
         line = [x1, y1, x2, y2]
         return np.array(line).astype(int).reshape(-1, 4)
         
-    
     sorted_lines = get_sorted_lines(lines)
     
     for i in range(len(sorted_lines)-1):
         line1 = sorted_lines[i]
         line2 = sorted_lines[i+1]
-          
+           
         s1 = slop(line1)
         s2 = slop(line2)
         s3 = slop(merge_line(line1, line2))
-          
-        # 1 rad == 57 degree
-        # 1 rad == 1 degree
-        if abs(s1-s2) <= 0.02 and abs(s1-s3) <= 0.02:
+           
+        if abs(s1-s2) <= np.pi/180 and abs(s1-s3) <= np.pi/180:
             sorted_lines.append(merge_line(line1, line2))
-            print(s1, s2, s3)
 
     for line in sorted_lines:
         for x1,y1,x2,y2 in line:
-            # cv2.line(img, (x1, y1), (x2, y2), color, thickness)
-            cv2.line(img, (x1, y1), (x2, y2), color, 5)
-            
+            cv2.line(img, (x1, y1), (x2, y2), color, thickness)
 
 def hough_lines(img, rho, theta, threshold, min_line_len, max_line_gap):
     """
