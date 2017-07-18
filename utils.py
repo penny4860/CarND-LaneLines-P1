@@ -108,12 +108,12 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=4):
     
     sorted_lines = get_sorted_lines(lines)
     
-#     for i in range(len(sorted_lines)-1):
-#         line1 = sorted_lines[i]
-#         line2 = sorted_lines[i+1]
-#            
-#         if is_merge(line1, line2):
-#             sorted_lines.append(merge_line(line1, line2))
+    for i in range(len(sorted_lines)-1):
+        line1 = sorted_lines[i]
+        line2 = sorted_lines[i+1]
+           
+        if is_merge(line1, line2):
+            sorted_lines.append(merge_line(line1, line2))
             
     for line in sorted_lines:
         for x1,y1,x2,y2 in line:
