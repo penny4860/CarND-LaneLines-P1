@@ -127,7 +127,16 @@ def hough_lines(img, rho, theta, threshold, min_line_len, max_line_gap):
     """
     lines = cv2.HoughLinesP(img, rho, theta, threshold, np.array([]), minLineLength=min_line_len, maxLineGap=max_line_gap)
     line_img = np.zeros((img.shape[0], img.shape[1], 3), dtype=np.uint8)
-    draw_lines(line_img, lines)
+    
+    for line in lines:
+        for x1,y1,x2,y2 in line:
+            cv2.line(line_img, (x1, y1), (x2, y2), (255,255,255), 5)
+
+    kernelSize = (7, 7)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, kernelSize)
+    line_img = cv2.morphologyEx(line_img, cv2.MORPH_OPEN, kernel)
+    
+    # draw_lines(line_img, lines)
     return line_img
 
 # Python 3 has support for cool math symbols.
